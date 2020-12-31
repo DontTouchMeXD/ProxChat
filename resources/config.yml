@@ -1,0 +1,11 @@
+# enable or disable PureChat support
+purechat_support: false
+
+# raidus for player to communicate or chatting (meter)
+radius: 20 
+
+# chat format (if purechat support is disable)
+# {username} = player original/real name
+# {display_name} = player display name
+# {message} = chat message
+chat_format: "{username}: {message}"
