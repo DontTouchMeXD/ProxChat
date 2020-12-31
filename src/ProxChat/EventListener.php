@@ -20,10 +20,7 @@ class EventListener implements Listener {
         }
         $message = $event->getMessage();
         $player = $event->getPlayer(); 
-        $p = $this->main->getPlayerNearby($player); 
-        if(empty($p)){
-            return;
-        }
+        $p = $this->main->getPlayerNearby($player);
         if($this->main->isPureChatEnable()){
             $pureChat = $this->main->getServer()->getPluginManager()->getPlugin("PureChat");
             $levelName = $pureChat->getConfig()->get("enable-multiworld-chat") ? $player->getLevel()->getName() : null;
