@@ -1,7 +1,7 @@
 # enable or disable PureChat support
 purechat_support: false
 
-# raidus for player to communicate or chatting (meter)
+# radius for player to communicate or chatting (meter)
 radius: 20 
 
 # chat format (if purechat support is disable)
