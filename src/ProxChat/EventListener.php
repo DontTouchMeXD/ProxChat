@@ -4,6 +4,7 @@ namespace ProxChat;
 
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
+use pocketmine\Player;
 
 class EventListener implements Listener {
     
@@ -18,25 +19,21 @@ class EventListener implements Listener {
         if($event->isCancelled()) return;
         $message = $event->getMessage();
         $player = $event->getPlayer(); 
-        if($this->main->isPureChatEnable()){
-            $pureChat = $this->main->getServer()->getPluginManager()->getPlugin("PureChat");
-            $levelName = $pureChat->getConfig()->get("enable-multiworld-chat") ? $player->getLevel()->getName() : null;
-            $originalChatFormat = $pureChat->getOriginalChatFormat($player, $levelName);
-            $chatFormat = $pureChat->applyColors($originalChatFormat);
-            $chatFormat = $pureChat->applyPCTags($chatFormat, $player, $message, $levelName);
-            $event->setFormat($chatFormat);
-        } else {
+        if(!$this->main->isPureChatEnable()){ 
             $chatFormat = str_replace(["{username}", "{display_name}", "{message}"], [$player->getName(), $player->getDisplayName(), $message], $this->main->config->get("chat_format"));
             $event->setFormat($chatFormat);
         }
-        $recipients = $event->getRecipients();
-		foreach($recipients as $key => $recipient){
-			if($recipient instanceof Player){
-				if($recipient->getLevel() != $player->getLevel() or $recipient->distance($player) > $this->main->config->get("radius")){
-				    unset($recipients[$key]); 
-				}
-			}
-		}
+        $recipients = $this->getNearbyPlayer($player);
 		$event->setRecipients($recipients);  
+    }
+    
+    public function getNearbyPlayer(Player $player): array {
+        $nearby = [];
+        foreach($player->getLevel()->getPlayers() as $p){
+            if($p->distance($player) <= $this->main->config->get("radius")){
+                $nearby[] = $p;
+            }
+        }
+        return $nearby;
     }
 }
